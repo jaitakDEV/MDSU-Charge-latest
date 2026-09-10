@@ -1,0 +1,931 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id                      String                   @id @default(cuid())
+  name                    String?
+  email                   String                   @unique
+  emailVerified           DateTime?
+  hashedPassword          String?
+  image                   String?
+  role                    Role                     @default(STUDENT)
+  isActive                Boolean                  @default(true)
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  collegeId               String?
+  phoneNumber             String?
+  batchYear               Int?
+  registrationNumber      String?                  @unique
+  rollNumber              String?                  @unique
+  blogPosts               BlogPost[]               @relation("BlogAuthor")
+  certificates            Certificate[]
+  companyProfile          CompanyProfile?
+  authoredCourses         Course[]                 @relation("AuthoredCourses")
+  emailVerificationTokens EmailVerificationToken[]
+  enrolments              Enrolment[]
+  eventRegistrations      EventRegistration[]
+  eventWaitlist           EventWaitlist[]
+  authoredEvents          Event[]                  @relation("AuthoredEvents")
+  lectureProgress         LectureProgress[]
+  authoredNews            NewsArticle[]            @relation("AuthoredNews")
+  orders                  Order[]
+  passwordResetTokens     PasswordResetToken[]
+  sessions                Session[]
+  careerProfile           StudentCareerProfile?
+  college                 College?                 @relation(fields: [collegeId], references: [id])
+
+  @@map("users")
+}
+
+model StudentCounter {
+  id        String @id @default(cuid())
+  year      Int    @unique
+  lastCount Int    @default(0)
+
+  @@map("student_counters")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model PasswordResetToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+  userId  String
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([email, token])
+  @@map("password_reset_tokens")
+}
+
+model EmailVerificationToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+  userId  String
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([email, token])
+  @@map("email_verification_tokens")
+}
+
+model College {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  isOther   Boolean  @default(false)
+  city      String?
+  state     String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+
+  @@map("colleges")
+}
+
+model Category {
+  id           String   @id @default(cuid())
+  name         String   @unique
+  slug         String   @unique
+  description  String?
+  image        String?
+  isActive     Boolean  @default(true)
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  courses      Course[]
+
+  @@map("categories")
+}
+
+model Course {
+  id              String          @id @default(cuid())
+  title           String
+  slug            String          @unique
+  description     String?
+  about           String?
+  thumbnail       String?
+  previewVideoUrl String?
+  price           Int
+  mrp             Int             @default(0)
+  accessDuration  AccessDuration  @default(THREE_MONTHS)
+  status          CourseStatus    @default(DRAFT)
+  level           CourseLevel     @default(BEGINNER)
+  language        String          @default("Hindi")
+  totalDuration   Int             @default(0)
+  totalLectures   Int             @default(0)
+  isFeatured      Boolean         @default(false)
+  metaTitle       String?
+  metaDescription String?
+  categoryId      String
+  authorId        String
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  certificates    Certificate[]
+  coupons         Coupon[]
+  faqs            CourseFaq[]
+  sections        CourseSection[]
+  author          User            @relation("AuthoredCourses", fields: [authorId], references: [id])
+  category        Category        @relation(fields: [categoryId], references: [id])
+  enrolments      Enrolment[]
+  orders          Order[]
+
+  @@map("courses")
+}
+
+model CourseSection {
+  id           String    @id @default(cuid())
+  title        String
+  displayOrder Int       @default(0)
+  courseId     String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  course       Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lectures     Lecture[]
+
+  @@map("course_sections")
+}
+
+model Lecture {
+  id           String            @id @default(cuid())
+  title        String
+  type         LectureType       @default(VIDEO)
+  videoUrl     String?
+  documentUrl  String?
+  textContent  String?
+  duration     Int               @default(0)
+  displayOrder Int               @default(0)
+  isPreview    Boolean           @default(false)
+  isPublished  Boolean           @default(true)
+  sectionId    String
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  progress     LectureProgress[]
+  section      CourseSection     @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  @@map("lectures")
+}
+
+model CourseFaq {
+  id           String @id @default(cuid())
+  question     String
+  answer       String
+  displayOrder Int    @default(0)
+  courseId     String
+  course       Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@map("course_faqs")
+}
+
+model Certificate {
+  id                String   @id @default(cuid())
+  userId            String
+  courseId          String
+  certificateNumber String   @unique
+  courseTitle       String
+  studentName       String
+  issuedAt          DateTime @default(now())
+  pdfUrl            String?
+  course            Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@map("certificates")
+}
+
+model Enrolment {
+  id                String         @id @default(cuid())
+  userId            String
+  courseId          String
+  accessDuration    AccessDuration
+  accessGrantedAt   DateTime       @default(now())
+  accessExpiresAt   DateTime?
+  renewedAt         DateTime?
+  completionPercent Int            @default(0)
+  completedAt       DateTime?
+  orderId           String?        @unique
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  course            Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  order             Order?         @relation(fields: [orderId], references: [id])
+  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@map("enrolments")
+}
+
+model Order {
+  id                String         @id @default(cuid())
+  userId            String
+  courseId          String
+  status            OrderStatus    @default(PENDING)
+  amountPaid        Int
+  originalPrice     Int
+  discountAmount    Int            @default(0)
+  razorpayOrderId   String         @unique
+  razorpayPaymentId String?        @unique
+  razorpaySignature String?
+  couponId          String?
+  accessDuration    AccessDuration
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  enrolment         Enrolment?
+  coupon            Coupon?        @relation(fields: [couponId], references: [id])
+  course            Course         @relation(fields: [courseId], references: [id])
+  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("orders")
+}
+
+model Coupon {
+  id            String       @id @default(cuid())
+  code          String       @unique
+  discountType  DiscountType
+  discountValue Int
+  validFrom     DateTime
+  validUntil    DateTime?
+  maxUses       Int?
+  usedCount     Int          @default(0)
+  isActive      Boolean      @default(true)
+  courseId      String?
+  minOrderValue Int          @default(0)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  course        Course?      @relation(fields: [courseId], references: [id])
+  orders        Order[]
+
+  @@map("coupons")
+}
+
+model LectureProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  lectureId   String
+  isCompleted Boolean  @default(false)
+  watchedAt   DateTime @default(now())
+  lecture     Lecture  @relation(fields: [lectureId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lectureId])
+  @@map("lecture_progress")
+}
+
+model Banner {
+  id           String    @id @default(cuid())
+  imageUrl     String
+  altText      String
+  title        String?
+  subtitle     String?
+  buttonText   String?
+  buttonLink   String?
+  startDate    DateTime?
+  endDate      DateTime?
+  displayOrder Int       @default(0)
+  isActive     Boolean   @default(true)
+  targetPage   String    @default("home")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("banners")
+}
+
+model Announcement {
+  id         String    @id @default(cuid())
+  title      String
+  content    String
+  type       String    @default("info")
+  isActive   Boolean   @default(true)
+  startDate  DateTime?
+  endDate    DateTime?
+  targetRole String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@map("announcements")
+}
+
+model BlogPost {
+  id              String         @id @default(cuid())
+  title           String
+  slug            String         @unique
+  excerpt         String?
+  content         String
+  coverImage      String?
+  status          BlogPostStatus @default(DRAFT)
+  publishedAt     DateTime?
+  metaTitle       String?
+  metaDescription String?
+  authorId        String
+  tags            String[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  author          User           @relation("BlogAuthor", fields: [authorId], references: [id])
+
+  @@map("blog_posts")
+}
+
+model StaticPage {
+  id              String   @id @default(cuid())
+  title           String
+  slug            String   @unique
+  content         String
+  isPublished     Boolean  @default(false)
+  metaTitle       String?
+  metaDescription String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("static_pages")
+}
+
+model SeoSettings {
+  id                  String   @id @default("global")
+  siteTitleSuffix     String   @default("— MDSSC")
+  metaDescription     String   @default("")
+  ogImage             String?
+  googleAnalyticsId   String?
+  searchConsoleVerify String?
+  robotsIndex         Boolean  @default(true)
+  updatedAt           DateTime @updatedAt
+
+  @@map("seo_settings")
+}
+
+model Event {
+  id                   String              @id @default(cuid())
+  title                String
+  slug                 String              @unique
+  description          String?
+  content              String?
+  coverImage           String?
+  eventType            EventType
+  mode                 EventMode
+  status               EventStatus         @default(DRAFT)
+  isFeatured           Boolean             @default(false)
+  venue                String?
+  joinLink             String?
+  startDate            DateTime
+  endDate              DateTime?
+  timezone             String              @default("Asia/Kolkata")
+  capacity             Int?
+  registeredCount      Int                 @default(0)
+  waitlistEnabled      Boolean             @default(false)
+  waitlistCount        Int                 @default(0)
+  pricingType          PricingType
+  price                Int                 @default(0)
+  refundPolicy         String?
+  cancellationDeadline DateTime?
+  metaTitle            String?
+  metaDescription      String?
+  tags                 String[]
+  authorId             String
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+  registrations        EventRegistration[]
+  waitlistEntries      EventWaitlist[]
+  author               User                @relation("AuthoredEvents", fields: [authorId], references: [id])
+
+  @@map("events")
+}
+
+model EventRegistration {
+  id                String             @id @default(cuid())
+  eventId           String
+  userId            String?
+  guestName         String?
+  guestEmail        String?
+  guestPhone        String?
+  status            RegistrationStatus @default(PENDING)
+  ticketCode        String             @unique @default(cuid())
+  checkedIn         Boolean            @default(false)
+  checkedInAt       DateTime?
+  amountPaid        Int?
+  razorpayOrderId   String?            @unique
+  razorpayPaymentId String?            @unique
+  razorpaySignature String?
+  registeredAt      DateTime           @default(now())
+  event             Event              @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user              User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@map("event_registrations")
+}
+
+model EventWaitlist {
+  id         String   @id @default(cuid())
+  eventId    String
+  userId     String?
+  guestName  String?
+  guestEmail String?
+  guestPhone String?
+  position   Int
+  notified   Boolean  @default(false)
+  joinedAt   DateTime @default(now())
+  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@map("event_waitlist")
+}
+
+model NewsArticle {
+  id              String     @id @default(cuid())
+  title           String
+  slug            String     @unique
+  excerpt         String?
+  content         String
+  coverImage      String?
+  status          NewsStatus @default(DRAFT)
+  isFeatured      Boolean    @default(false)
+  publishedAt     DateTime?
+  tags            String[]
+  metaTitle       String?
+  metaDescription String?
+  authorId        String
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  author          User       @relation("AuthoredNews", fields: [authorId], references: [id])
+
+  @@map("news_articles")
+}
+
+model CompanyProfile {
+  id                  String                @id @default(cuid())
+  userId              String                @unique
+  companyName         String
+  slug                String                @unique
+  companyType         CompanyType
+  industry            String
+  website             String?
+  logoUrl             String?
+  description         String?
+  companySize         CompanySize
+  headquarters        String
+  city                String
+  state               String
+  country             String                @default("India")
+  contactPerson       String
+  contactEmail        String
+  contactPhone        String
+  designation         String
+  approvalStatus      CompanyApprovalStatus @default(PENDING)
+  approvedById        String?
+  approvedAt          DateTime?
+  rejectedReason      String?
+  linkedinUrl         String?
+  glassdoorUrl        String?
+  metaTitle           String?
+  metaDescription     String?
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  panNumber           String?
+  udyamCertificateUrl String?
+  user                User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobListings         JobListing[]
+
+  @@map("company_profiles")
+}
+
+model JobListing {
+  id                  String                @id @default(cuid())
+  companyId           String
+  slug                String                @unique
+  title               String
+  opportunityType     OpportunityType
+  description         String
+  responsibilities    String[]
+  requirements        String[]
+  skills              String[]
+  workMode            WorkMode
+  location            String?
+  state               String?
+  compensationType    CompensationType
+  salaryMin           Int?
+  salaryMax           Int?
+  stipendMin          Int?
+  stipendMax          Int?
+  projectBudget       Int?
+  isSalaryDisclosed   Boolean               @default(true)
+  durationType        DurationType
+  durationValue       Int?
+  durationUnit        DurationUnit?
+  startDate           DateTime?
+  endDate             DateTime?
+  walkInDate          DateTime?
+  walkInTime          String?
+  walkInVenue         String?
+  targetColleges      String[]
+  targetBatchYears    Int[]
+  certificateOffered  Boolean               @default(false)
+  ppoOffered          Boolean               @default(false)
+  minCgpa             Float?
+  educationLevel      EducationLevel?
+  educationStream     String?
+  minExperienceYears  Int                   @default(0)
+  maxExperienceYears  Int?
+  genderPreference    String                @default("Any")
+  openings            Int                   @default(1)
+  applicationDeadline DateTime?
+  applicationCount    Int                   @default(0)
+  status              ListingStatus         @default(DRAFT)
+  approvalStatus      ListingApprovalStatus @default(PENDING_REVIEW)
+  approvedById        String?
+  approvedAt          DateTime?
+  rejectedReason      String?
+  isFeatured          Boolean               @default(false)
+  metaTitle           String?
+  metaDescription     String?
+  tags                String[]
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  applications        JobApplication[]
+  company             CompanyProfile        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  savedBy             SavedJob[]
+  screeningQuestions  ScreeningQuestion[]
+
+  @@map("job_listings")
+}
+
+model StudentCareerProfile {
+  id                String                 @id @default(cuid())
+  userId            String                 @unique
+  headline          String?
+  summary           String?
+  currentCity       String?
+  currentState      String?
+  availableFrom     DateTime?
+  preferredWorkMode WorkMode?
+  skills            String[]
+  languages         String[]
+  resumeUrl         String?
+  resumeKey         String?
+  resumeUpdatedAt   DateTime?
+  isProfileVisible  Boolean                @default(true)
+  isOpenToWork      Boolean                @default(true)
+  completionPercent Int                    @default(0)
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+  applications      JobApplication[]
+  jobPreferences    JobPreference?
+  savedJobs         SavedJob[]
+  user              User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  certifications    StudentCertification[]
+  education         StudentEducation[]
+  experience        StudentExperience[]
+  projects          StudentProject[]
+
+  @@map("student_career_profiles")
+}
+
+model StudentEducation {
+  id           String               @id @default(cuid())
+  profileId    String
+  degree       String
+  fieldOfStudy String
+  institution  String
+  collegeId    String?
+  startYear    Int
+  endYear      Int?
+  isCurrently  Boolean              @default(false)
+  cgpa         Float?
+  percentage   Float?
+  achievements String?
+  displayOrder Int                  @default(0)
+  profile      StudentCareerProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("student_education")
+}
+
+model StudentExperience {
+  id             String               @id @default(cuid())
+  profileId      String
+  title          String
+  company        String
+  employmentType String
+  location       String?
+  startDate      DateTime
+  endDate        DateTime?
+  isCurrently    Boolean              @default(false)
+  description    String?
+  skills         String[]
+  displayOrder   Int                  @default(0)
+  profile        StudentCareerProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("student_experience")
+}
+
+model StudentProject {
+  id           String               @id @default(cuid())
+  profileId    String
+  title        String
+  description  String
+  technologies String[]
+  liveUrl      String?
+  repoUrl      String?
+  startDate    DateTime?
+  endDate      DateTime?
+  displayOrder Int                  @default(0)
+  profile      StudentCareerProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("student_projects")
+}
+
+model StudentCertification {
+  id            String               @id @default(cuid())
+  profileId     String
+  name          String
+  issuingOrg    String
+  issueDate     DateTime
+  expiryDate    DateTime?
+  credentialId  String?
+  credentialUrl String?
+  displayOrder  Int                  @default(0)
+  profile       StudentCareerProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("student_certifications")
+}
+
+model JobApplication {
+  id               String               @id @default(cuid())
+  listingId        String
+  profileId        String
+  coverLetter      String?
+  resumeUrl        String
+  resumeKey        String?
+  portfolioUrl     String?
+  expectedSalary   Int?
+  noticePeriod     Int?
+  availableFrom    DateTime?
+  screeningAnswers Json?
+  status           ApplicationStatus    @default(APPLIED)
+  statusUpdatedAt  DateTime?
+  statusNote       String?
+  interviewDate    DateTime?
+  interviewMode    String?
+  interviewLink    String?
+  isShortlisted    Boolean              @default(false)
+  isStarred        Boolean              @default(false)
+  companyNotes     String?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  listing          JobListing           @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  profile          StudentCareerProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([listingId, profileId])
+  @@map("job_applications")
+}
+
+model JobPreference {
+  id                  String               @id @default(cuid())
+  profileId           String               @unique
+  preferredTypes      OpportunityType[]
+  preferredRoles      String[]
+  preferredLocations  String[]
+  preferredWorkMode   WorkMode?
+  minSalary           Int?
+  preferredIndustries String[]
+  isAlertEnabled      Boolean              @default(true)
+  alertFrequency      AlertFrequency       @default(DAILY)
+  profile             StudentCareerProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("job_preferences")
+}
+
+model SavedJob {
+  id        String               @id @default(cuid())
+  listingId String
+  profileId String
+  savedAt   DateTime             @default(now())
+  listing   JobListing           @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  profile   StudentCareerProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([listingId, profileId])
+  @@map("saved_jobs")
+}
+
+model ScreeningQuestion {
+  id           String       @id @default(cuid())
+  listingId    String
+  question     String
+  type         QuestionType
+  options      String[]
+  isRequired   Boolean      @default(true)
+  displayOrder Int          @default(0)
+  listing      JobListing   @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@map("screening_questions")
+}
+
+enum Role {
+  STUDENT
+  FACULTY
+  CMS_EDITOR
+  ADMIN
+  JOB_PROVIDER
+}
+
+enum AccessDuration {
+  FIFTEEN_DAYS
+  ONE_MONTH
+  THREE_MONTHS
+  SIX_MONTHS
+  ONE_YEAR
+  LIFETIME
+}
+
+enum CourseStatus {
+  DRAFT
+  REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum CourseLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum LectureType {
+  VIDEO
+  DOCUMENT
+  TEXT
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum DiscountType {
+  PERCENT
+  FLAT
+}
+
+enum BlogPostStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum EventType {
+  UPCOMING
+  PAST
+}
+
+enum EventMode {
+  ONLINE
+  OFFLINE
+  HYBRID
+}
+
+enum PricingType {
+  FREE
+  PAID
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+  ARCHIVED
+}
+
+enum RegistrationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  REFUNDED
+}
+
+enum NewsStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum OpportunityType {
+  FULL_TIME_JOB
+  INTERNSHIP
+  APPRENTICESHIP
+  FREELANCE
+  WALK_IN_DRIVE
+  CAMPUS_HIRING
+  PART_TIME
+}
+
+enum WorkMode {
+  ONSITE
+  REMOTE
+  HYBRID
+}
+
+enum DurationType {
+  PERMANENT
+  FIXED
+  PROJECT_BASED
+  EVENT
+}
+
+enum DurationUnit {
+  WEEKS
+  MONTHS
+  YEARS
+}
+
+enum EducationLevel {
+  ANY
+  DIPLOMA
+  GRADUATE
+  POSTGRADUATE
+}
+
+enum CompensationType {
+  PAID
+  UNPAID
+  NEGOTIABLE
+}
+
+enum ListingStatus {
+  DRAFT
+  SUBMITTED
+  PUBLISHED
+  CLOSED
+  ARCHIVED
+}
+
+enum ListingApprovalStatus {
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+  REVISION_NEEDED
+}
+
+enum ApplicationStatus {
+  APPLIED
+  UNDER_REVIEW
+  SHORTLISTED
+  INTERVIEW_SCHEDULED
+  INTERVIEWED
+  OFFERED
+  OFFER_ACCEPTED
+  OFFER_REJECTED
+  REJECTED
+  WITHDRAWN
+}
+
+enum CompanyApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
+enum CompanyType {
+  COMPANY
+  STARTUP
+  NGO
+  INSTITUTE
+  FREELANCER
+  RECRUITER
+}
+
+enum CompanySize {
+  STARTUP_1_10
+  SMALL_11_50
+  MEDIUM_51_200
+  LARGE_201_500
+  ENTERPRISE_500_PLUS
+}
+
+enum AlertFrequency {
+  INSTANT
+  DAILY
+  WEEKLY
+}
+
+enum QuestionType {
+  TEXT
+  YES_NO
+  MCQ
+  NUMBER
+}

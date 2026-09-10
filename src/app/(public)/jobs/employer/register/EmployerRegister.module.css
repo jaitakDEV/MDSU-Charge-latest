@@ -1,0 +1,231 @@
+.page {
+  min-height: 100vh;
+  background: #f8fafc;
+  padding: 3rem 1.5rem;
+  font-family: var(--font-body, "Inter", sans-serif);
+  display: flex;
+  align-items: center;
+}
+
+.shell {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow:
+    0 20px 60px rgba(107, 52, 16, 0.12),
+    0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+/* ─── INFO PANEL ──────────────────────────────────────────────────────────── */
+.infoPanel {
+  position: relative;
+  background: linear-gradient(160deg, #c1570d 0%, #f57a22 55%, #ff9f52 100%);
+  padding: 48px 40px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+.infoCircle1 {
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  pointer-events: none;
+}
+.infoCircle2 {
+  position: absolute;
+  bottom: -60px;
+  left: -40px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+}
+.infoContent {
+  position: relative;
+  z-index: 1;
+}
+.infoEyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ffe0c2;
+  margin: 0 0 14px;
+}
+.infoTitle {
+  font-family: var(--font-display, "Plus Jakarta Sans", sans-serif);
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0 0 14px;
+}
+.infoDesc {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #ffe8d4;
+  margin: 0 0 28px;
+  max-width: 380px;
+}
+
+.stepsList {
+  list-style: none;
+  margin: 0 0 28px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.stepItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.stepNum {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stepText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 2px;
+}
+.stepTitle {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #fff;
+}
+.stepDesc {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #ffe0c2;
+}
+
+.benefitsList {
+  list-style: none;
+  margin: 0;
+  padding: 18px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.benefitItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #fff4ea;
+}
+.benefitIcon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #ffe0c2;
+}
+
+/* ─── FORM PANEL ──────────────────────────────────────────────────────────── */
+.formPanel {
+  background: #fff;
+  padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.formHeader {
+  margin-bottom: 24px;
+}
+.formTitle {
+  font-family: var(--font-display, "Plus Jakarta Sans", sans-serif);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #1f1206;
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+.formSubtitle {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.studentLink {
+  text-align: center;
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 1.5rem 0 0;
+}
+.studentLinkAnchor {
+  color: #f57a22;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.studentLinkAnchor:hover {
+  color: #c1570d;
+  text-decoration: underline;
+}
+
+/* ─── RESPONSIVE ──────────────────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .shell {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+  }
+  .infoPanel {
+    padding: 36px 28px;
+  }
+  .formPanel {
+    padding: 36px 28px;
+  }
+  .stepsList {
+    margin-bottom: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 1.5rem 1rem;
+  }
+  .shell {
+    border-radius: 18px;
+  }
+  .infoPanel,
+  .formPanel {
+    padding: 28px 20px;
+  }
+  .infoTitle {
+    font-size: 1.4rem;
+  }
+  .infoDesc {
+    max-width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studentLinkAnchor {
+    transition: none;
+  }
+}

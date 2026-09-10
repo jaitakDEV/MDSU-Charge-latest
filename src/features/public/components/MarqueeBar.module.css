@@ -1,0 +1,175 @@
+/* .bar {
+  width: 100%;
+  background: #1a3a6b;
+  padding: 4px 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  z-index: 1001;
+}
+
+.fadeLeft,
+.fadeRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 60px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.fadeLeft {
+  left: 0;
+  background: linear-gradient(to right, #1a3a6b, transparent);
+}
+.fadeRight {
+  right: 0;
+  background: linear-gradient(to left, #1a3a6b, transparent);
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  animation: mqScroll 30s linear infinite;
+}
+
+.track:hover {
+  animation-play-state: paused;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 2px 40px;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.88);
+  letter-spacing: 0.03em;
+  font-family: inherit;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(9, 81, 165, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 1px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #bfdbfe;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+@keyframes mqScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 480px) {
+  .item {
+    font-size: 12px;
+    padding: 2px 24px;
+  }
+  .pill {
+    font-size: 10px;
+    padding: 1px 8px;
+  }
+} */
+
+.bar {
+  width: 100%;
+  background: #c1570d;
+  padding: 4px 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  z-index: 1001;
+}
+
+.fadeLeft,
+.fadeRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 60px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.fadeLeft {
+  left: 0;
+  background: linear-gradient(to right, #c1570d, transparent);
+}
+.fadeRight {
+  right: 0;
+  background: linear-gradient(to left, #c1570d, transparent);
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  animation: mqScroll 30s linear infinite;
+}
+
+.track:hover {
+  animation-play-state: paused;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 2px 40px;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.88);
+  letter-spacing: 0.03em;
+  font-family: inherit;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(245, 122, 34, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 1px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #ffd9b3;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+@keyframes mqScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 480px) {
+  .item {
+    font-size: 12px;
+    padding: 2px 24px;
+  }
+  .pill {
+    font-size: 10px;
+    padding: 1px 8px;
+  }
+}

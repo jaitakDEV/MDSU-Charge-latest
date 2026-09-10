@@ -1,0 +1,372 @@
+.section {
+  width: 100%;
+  background: #fff5ec;
+  padding: 72px 0 88px;
+  font-family: "Inter", sans-serif;
+}
+
+.grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 6vw;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.colHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.colTitle {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-weight: 800;
+  color: #6b3410;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.titleAccent {
+  color: #f57a22;
+}
+
+.viewAll {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f57a22;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition:
+    gap 0.18s,
+    color 0.18s;
+}
+.viewAll:hover {
+  gap: 9px;
+  color: #c1570d;
+}
+
+.colDivider {
+  height: 1px;
+  background: #ffe9d6;
+  margin: 16px 0 28px;
+}
+
+/* ───────── News slider ───────── */
+
+.newsSlider {
+  position: relative;
+}
+
+.newsTrack {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.newsTrack::-webkit-scrollbar {
+  display: none;
+}
+
+.newsCard {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.newsImgWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #4a2408 0%, #f57a22 100%);
+}
+
+.newsImg {
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.newsDate {
+  display: block;
+  margin-top: 18px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #f57a22;
+}
+
+.newsTitle {
+  margin: 8px 0 0;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #6b3410;
+  transition: color 0.18s;
+}
+.newsCard:hover .newsTitle {
+  color: #f57a22;
+}
+
+.navBtn {
+  position: absolute;
+  top: calc(50% - 28px);
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.97);
+  color: #f57a22;
+  box-shadow: 0 4px 16px rgba(193, 87, 13, 0.18);
+  cursor: pointer;
+  z-index: 3;
+  transition:
+    background 0.18s,
+    color 0.18s,
+    transform 0.18s;
+}
+.navBtn:hover {
+  background: linear-gradient(135deg, #f57a22 0%, #ff9f52 100%);
+  color: #ffffff;
+}
+.navBtnPrev {
+  left: -16px;
+}
+.navBtnNext {
+  right: -16px;
+}
+
+.dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 20px;
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ffd3ac;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    width 0.2s,
+    border-radius 0.2s;
+}
+.dotActive {
+  width: 22px;
+  border-radius: 4px;
+  background: #f57a22;
+}
+
+/* ───────── Events marquee ───────── */
+
+.marqueeViewport {
+  position: relative;
+  height: 560px;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.marqueeFadeTop,
+.marqueeFadeBottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 56px;
+  z-index: 2;
+  pointer-events: none;
+}
+.marqueeFadeTop {
+  top: 0;
+  background: linear-gradient(
+    to bottom,
+    #fff5ec 0%,
+    rgba(255, 245, 236, 0) 100%
+  );
+}
+.marqueeFadeBottom {
+  bottom: 0;
+  background: linear-gradient(to top, #fff5ec 0%, rgba(255, 245, 236, 0) 100%);
+}
+
+.marqueeTrack {
+  display: flex;
+  flex-direction: column;
+  animation: scrollEvents 24s linear infinite;
+}
+.marqueeTrack:hover {
+  animation-play-state: paused;
+}
+
+.marqueeList {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.eventItem {
+  padding: 18px 4px;
+}
+
+.eventLink {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+}
+
+.eventDate {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #f57a22;
+}
+
+.eventTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #6b3410;
+  transition: color 0.18s;
+}
+.eventLink:hover .eventTitle {
+  color: #f57a22;
+}
+
+.eventRule {
+  display: block;
+  width: 32px;
+  height: 2px;
+  background: #f57a22;
+  border-radius: 2px;
+  margin-top: 4px;
+}
+
+@keyframes scrollEvents {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+/* ───────── Empty states ───────── */
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  background: #fff;
+  border: 1px solid #ffe9d6;
+  border-radius: 16px;
+}
+.emptyIcon {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 12px;
+  border-radius: 50%;
+  background: #fff8f2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.emptyTitle {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #4a4038;
+  margin: 0;
+}
+
+/* ───────── Responsive ───────── */
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 56px;
+  }
+  .marqueeViewport {
+    height: 420px;
+  }
+}
+
+@media (max-width: 640px) {
+  .section {
+    padding: 48px 0 64px;
+  }
+  .grid {
+    gap: 44px;
+  }
+  .colDivider {
+    margin: 14px 0 22px;
+  }
+  .navBtn {
+    width: 36px;
+    height: 36px;
+  }
+  .navBtnPrev {
+    left: -8px;
+  }
+  .navBtnNext {
+    right: -8px;
+  }
+  .marqueeViewport {
+    height: 380px;
+  }
+  .newsTitle {
+    font-size: 0.98rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marqueeTrack {
+    animation: none;
+  }
+  .newsTrack {
+    scroll-behavior: auto;
+  }
+  .newsImg,
+  .newsTitle,
+  .navBtn,
+  .dot,
+  .viewAll,
+  .eventTitle {
+    transition: none;
+  }
+}

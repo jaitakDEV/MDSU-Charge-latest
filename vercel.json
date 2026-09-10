@@ -1,0 +1,10 @@
+{
+  "crons": [
+    { "path": "/api/cron/job-alerts?frequency=DAILY", "schedule": "0 9 * * *" },
+    {
+      "path": "/api/cron/job-alerts?frequency=WEEKLY",
+      "schedule": "0 9 * * 1"
+    },
+    { "path": "/api/cron/listing-maintenance", "schedule": "0 6 * * *" }
+  ]
+}
