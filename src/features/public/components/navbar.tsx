@@ -32,7 +32,7 @@ const menuItems: MenuItem[] = [
     ],
   },
   { name: "Our Team", dropdown: [{ name: "Governance", path: "/our-team" }] },
-  { name: "Programmes", dropdown: [{ name: "Programmes", path: "" }] },
+  // { name: "Programmes", dropdown: [{ name: "Programmes", path: "" }] },
   { name: "Courses", dropdown: [{ name: "Courses", path: "/courses" }] },
   { name: "Gallery", dropdown: [{ name: "Gallary", path: "" }] },
   {

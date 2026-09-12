@@ -510,7 +510,7 @@ export function RegisterForm() {
           style={{
             fontSize: "11px",
             fontWeight: 700,
-            color: "#0951a5",
+            color: "#f57a22",
             textTransform: "uppercase",
             letterSpacing: "0.06em",
           }}
@@ -543,7 +543,7 @@ export function RegisterForm() {
           style={{
             fontSize: "11px",
             fontWeight: 700,
-            color: "#0951a5",
+            color: "#f57a22",
             textTransform: "uppercase",
             letterSpacing: "0.06em",
           }}
@@ -576,7 +576,7 @@ export function RegisterForm() {
           style={{
             fontSize: "11px",
             fontWeight: 700,
-            color: "#0951a5",
+            color: "#f57a22",
             textTransform: "uppercase",
             letterSpacing: "0.06em",
           }}
@@ -622,7 +622,7 @@ export function RegisterForm() {
           style={{
             fontSize: "11px",
             fontWeight: 700,
-            color: "#0951a5",
+            color: "#f57a22",
             textTransform: "uppercase",
             letterSpacing: "0.06em",
           }}
@@ -647,10 +647,10 @@ export function RegisterForm() {
                     fontWeight: 500,
                     border:
                       field.value === type
-                        ? "2px solid #0951a5"
+                        ? "2px solid #f57a22"
                         : "1px solid #e2e8f0",
                     background: field.value === type ? "#D6E8FA" : "white",
-                    color: field.value === type ? "#0951a5" : "#475569",
+                    color: field.value === type ? "#f57a22" : "#475569",
                     cursor: "pointer",
                   }}
                 >
@@ -680,7 +680,7 @@ export function RegisterForm() {
           style={{
             fontSize: "11px",
             fontWeight: 700,
-            color: "#0951a5",
+            color: "#f57a22",
             textTransform: "uppercase",
             letterSpacing: "0.06em",
           }}
@@ -743,7 +743,7 @@ export function RegisterForm() {
           style={{
             fontSize: "11px",
             fontWeight: 700,
-            color: "#0951a5",
+            color: "#f57a22",
             textTransform: "uppercase",
             letterSpacing: "0.06em",
           }}
@@ -792,7 +792,7 @@ export function RegisterForm() {
         style={{
           height: "44px",
           width: "100%",
-          background: "#0951a5",
+          background: "#f57a22",
           color: "#fff",
           fontWeight: 600,
           fontSize: "14px",

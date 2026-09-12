@@ -22,7 +22,7 @@ export default function RegisterPage() {
             fontWeight: 800,
             letterSpacing: "-0.5px",
             lineHeight: 1.2,
-            color: "#0951a5",
+            color: "#f57a22",
           }}
         >
           Create your account.
